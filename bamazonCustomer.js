@@ -61,7 +61,7 @@ function findQuantity(item) {
             // console.log("You wanted to buy " + answer.id + " of item " + item);
             purchaseItem(item, answer.id);
             // connection.end();
-            // process.exit(-1);
+            // process.exit(-1);:q
         });
 }
 
@@ -77,18 +77,32 @@ function purchaseItem(item, qty) {
             console.log("item not found: " + item);
             return printDatabase();
         }
-
-        if (res[0].stock_quantity < qty) {
+        var element = res[0];
+        if (element.stock_quantity < qty) {
             console.log("quantity not available: " + qty);
             return printDatabase();
         }
 
         // modify table now
-
-        printDatabase();
+        var new_quantity = element.stock_quantity - qty;
+        modifyDatabase(element.item_id, element.product_name, element.department_name, element.price,
+            new_quantity);
     });
+}
 
-    // process.exit(-1);
+function modifyDatabase(id, name, dept, price, qty) {
+    console.log("new quantity: " + qty);
+    var newRecord = {
+        item_id: id,
+        product_name: name,
+        department_name: dept,
+        price: price,
+        stock_quantity: qty
+    }
+    connection.query('UPDATE products SET ? WHERE item_id = ' + id, newRecord, function(err, result) {
+        if (err) throw err;
+        printDatabase();
+    })
 }
 
 // function artistSearch() {
