@@ -43,7 +43,7 @@ function startPrompts() {
         } else if (answer.selection === "Add New Product") {
             process.stdout.write('\033c');
             console.log("Add New Product");
-            addItem();
+            addNewItem();
         }
     });
 }
@@ -104,12 +104,12 @@ function findQuantity(item) {
             message: "How many?"
         })
         .then(function(answer) {
-            purchaseItem(item, answer.id);
+            addItem(item, answer.id);
         });
 }
 
 // get an item
-function purchaseItem(item, qty) {
+function addItem(item, qty) {
     console.log("You want to add " + qty + " to item " + item);
     // query database for item
     connection.query("SELECT * FROM products where item_id=" + item, function(err, res) {
@@ -120,8 +120,12 @@ function purchaseItem(item, qty) {
             console.log("item not found: " + item);
             return printDatabase();
         }
+        if (isNaN(qty)) {
+            console.log("bad quantity");
+            return printDatabase();
+        }
         var element = res[0];
-        if (element.stock_quantity < qty) {
+        if (element.stock_quantity < Number(qty)) {
             console.log("quantity not available: " + qty);
             return printDatabase();
         }
@@ -148,7 +152,7 @@ function modifyDatabase(id, name, dept, price, qty) {
     })
 }
 
-function addItem() {
+function addNewItem() {
     inquirer.prompt([{
         name: "item",
         type: "input",
@@ -166,6 +170,14 @@ function addItem() {
         type: "input",
         message: "Department?"
     }]).then(function(answer) {
+        if (isNaN(answer.price)) {
+            console.log("price is not a number");
+            return printDatabase();
+        }
+        if (isNaN(answer.stock_quantity)) {
+            console.log("quantity is not a number");
+            return printDatabase();
+        }
         var sql = `INSERT INTO products (product_name, department_name,price,stock_quantity) VALUES ("${answer.item}","${answer.department}",${answer.price},${answer.quantity} )`;
         console.log(sql)
         connection.query(sql, function(err, result) {
