@@ -122,7 +122,7 @@ function addItem(item, qty) {
             console.log("item not found: " + item);
             return printDatabase();
         }
-        if (isNaN(qty)) {
+        if (isNaN(qty) || qty.length === 0) {
             console.log("bad quantity");
             return printDatabase();
         }
@@ -172,14 +172,15 @@ function addNewItem() {
         type: "input",
         message: "Department?"
     }]).then(function(answer) {
-        if (isNaN(answer.price)) {
+        if (isNaN(answer.price) || answer.price.length === 0) {
             console.log("price is not a number");
             return printDatabase();
         }
-        if (isNaN(answer.stock_quantity)) {
+        if (isNaN(answer.quantity) || answer.quantity.length === 0) {
             console.log("quantity is not a number");
             return printDatabase();
         }
+        if (answer.item.length === 0 || answer.department.length === 0) return printDatabase();
         var sql = `INSERT INTO products (product_name, department_name,price,stock_quantity) VALUES ("${answer.item}","${answer.department}",${answer.price},${answer.quantity} )`;
         console.log(sql)
         connection.query(sql, function(err, result) {

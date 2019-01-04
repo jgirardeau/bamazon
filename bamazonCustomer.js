@@ -70,6 +70,9 @@ function findQuantity(item) {
 // get an item
 function purchaseItem(item, qty) {
     console.log("You want to buy " + qty + " of item " + item);
+    if (isNaN(qty) || isNaN(item) || qty.length === 0 || item.length === 0) {
+        return printDatabase();
+    }
     // query database for item
     connection.query("SELECT * FROM products where item_id=" + item, function(err, res) {
         if (err) throw err;
