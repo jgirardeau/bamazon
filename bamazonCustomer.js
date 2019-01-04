@@ -87,19 +87,22 @@ function purchaseItem(item, qty) {
 
         // modify table now
         var new_quantity = element.stock_quantity - qty;
+        var new_sales = Number(element.product_sales) + Number(qty) * Number(element.price);
         modifyDatabase(element.item_id, element.product_name, element.department_name, element.price,
-            new_quantity);
+            new_quantity, new_sales);
     });
 }
 
-function modifyDatabase(id, name, dept, price, qty) {
+function modifyDatabase(id, name, dept, price, qty, sales) {
     console.log("new quantity: " + qty);
+
     var newRecord = {
         item_id: id,
         product_name: name,
         department_name: dept,
         price: price,
-        stock_quantity: qty
+        stock_quantity: qty,
+        product_sales: sales
     }
     connection.query('UPDATE products SET ? WHERE item_id = ' + id, newRecord, function(err, result) {
         if (err) throw err;

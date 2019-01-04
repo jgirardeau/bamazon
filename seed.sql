@@ -12,3 +12,10 @@ VALUES
 ("pliars","tools",99.98,100),
 ("hammer","tools",38.18,70)
 ;
+
+INSERT INTO departments (department_name,over_head_costs)
+VALUES
+("footwear",10.1),
+("clothing",11.2),
+("tools",12.4)
+;
