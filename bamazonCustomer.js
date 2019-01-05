@@ -90,14 +90,18 @@ function purchaseItem(item, qty) {
 
         // modify table now
         var new_quantity = element.stock_quantity - qty;
-        var new_sales = Number(element.product_sales) + Number(qty) * Number(element.price);
+        var this_sale = Number(qty) * Number(element.price);
+        // console.log(Number(qty))
+        // console.log(Number(element.price))
+        var new_sales = Number(element.product_sales) + this_sale
+        console.log("new quantity: " + new_quantity + ", price: $" + this_sale);
         modifyDatabase(element.item_id, element.product_name, element.department_name, element.price,
             new_quantity, new_sales);
     });
 }
 
 function modifyDatabase(id, name, dept, price, qty, sales) {
-    console.log("new quantity: " + qty);
+
 
     var newRecord = {
         item_id: id,
