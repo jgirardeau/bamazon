@@ -31,7 +31,7 @@ function startPrompts() {
     }).then(function(answer) {
         if (answer.selection === "View Product Sales by Department") {
             process.stdout.write('\033c');
-            return printDatabase();
+            return viewSales();
         } else if (answer.selection === "Create New Department") {
             return addDepartment();
         } else return printDatabase();
@@ -78,4 +78,14 @@ function addDepartment() {
             return printDatabase();
         });
     });
+}
+
+function viewSales() {
+    var sql = 'SELECT department_id, departments.department_name, over_head_costs, SUM(products.product_sales) as "Product Sales", (SUM(products.product_sales) - over_head_costs) as "Profit" FROM departments RIGHT join products ON departments.department_name = products.department_name GROUP BY departments.department_name;'
+    connection.query(sql, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        return startPrompts();
+    });
+
 }
