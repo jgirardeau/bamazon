@@ -182,7 +182,7 @@ function addNewItem() {
         }
         if (answer.item.length === 0 || answer.department.length === 0) return printDatabase();
         var sql = `INSERT INTO products (product_name, department_name,price,stock_quantity) VALUES ("${answer.item}","${answer.department}",${answer.price},${answer.quantity} )`;
-        console.log(sql)
+        // console.log(sql)
         connection.query(sql, function(err, result) {
             if (err) throw err;
             printDatabase();
